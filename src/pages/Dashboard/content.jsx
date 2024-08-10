@@ -1,30 +1,54 @@
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Typography,
-  Avatar,
-  Chip,
-  Tooltip,
-  Progress,
-} from "@material-tailwind/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import { authorsTableData, projectsTableData } from "../../data";
+import {Button, Card, CardBody, CardHeader, Chip, Input, Typography,} from "@material-tailwind/react";
+import React, {useEffect, useState} from "react";
+import {ContentDrawer} from "./ContentDrawer";
+import SearchIcon from "../../icons/SearchIcon"
+import contentTableData from "../../data/authors-table-data";
 
 export function Content() {
+  const [open, setOpen] = React.useState(false);
+  const [titleVal,setTitleVal] = useState('');
+  const [filteredResults,setFilteredResults] = useState([]);
+
+  useEffect(() => {
+    if(titleVal === ''){
+      setFilteredResults([]);
+    }else{
+      const nextResults = contentTableData.filter(content => content.title.includes(titleVal))
+    setFilteredResults(nextResults);
+    }
+  }, [titleVal]);
+
+  function filterByStatus(status){
+    const nextResults = contentTableData.filter(content => content.status === status)
+    setFilteredResults(nextResults);
+  }
+
+
   return (
+      <>
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
-        <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
+        <CardHeader variant="gradient" color="gray" className="flex justify-between items-center mb-8 p-6">
           <Typography variant="h6" color="white">
-            Authors Table
+            Manage Content
           </Typography>
+          <div className={'flex gap-4'}>
+          <div className="w-72">
+            <Input value={titleVal} onChange={(e) => setTitleVal(e.target.value)} label="Seacrh by Title" icon={<SearchIcon/>} className={' placeholder:text-white/50 bg-white text-black/70 focus:outline-white focus:border-white focus:border'} variant={'outlined'}/>
+          </div>
+         <div className={'flex items-center gap-2'}>
+             <Button onClick={() => setFilteredResults([])}>All</Button>
+             <Button onClick={() => filterByStatus('Draft')}>Draft</Button>
+             <Button  onClick={() => filterByStatus('In Review')}>In Review</Button>
+             <Button  onClick={() => filterByStatus('Published')}>Published</Button>
+         </div>
+          </div>
         </CardHeader>
         <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-          <table className="w-full min-w-[640px] table-auto">
+          <table className="w-full max-w-[1160px] mx-auto table-auto">
             <thead>
               <tr>
-                {["author", "function", "status", "employed", ""].map((el) => (
+                {["Title", "Platform", "Status", "Actions"].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -40,64 +64,46 @@ export function Content() {
               </tr>
             </thead>
             <tbody>
-              {authorsTableData.map(
-                ({ img, name, email, job, online, date }, key) => {
+              {(filteredResults.length > 0 ? filteredResults : contentTableData).map(
+                ({ title, platform, status }, key) => {
                   const className = `py-3 px-5 ${
-                    key === authorsTableData.length - 1
+                    key === contentTableData.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                   }`;
 
                   return (
-                    <tr key={name}>
+                    <tr key={key}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar
-                            src={img}
-                            alt={name}
-                            size="sm"
-                            variant="rounded"
-                          />
+
                           <div>
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-semibold"
-                            >
-                              {name}
-                            </Typography>
-                            <Typography className="text-xs font-normal text-blue-gray-500">
-                              {email}
+
+                            <Typography className="text-md font-normal text-blue-gray-500">
+                              {title}
                             </Typography>
                           </div>
                         </div>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {job[0]}
-                        </Typography>
-                        <Typography className="text-xs font-normal text-blue-gray-500">
-                          {job[1]}
+                          {platform}
                         </Typography>
                       </td>
                       <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={online ? "green" : "blue-gray"}
-                          value={online ? "online" : "offline"}
+                          color={status ==='Published' ? "green" : "blue-gray"}
+                          value={status}
                           className="py-0.5 px-2 text-[11px] font-medium w-fit"
                         />
-                      </td>
-                      <td className={className}>
-                        <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {date}
-                        </Typography>
                       </td>
                       <td className={className}>
                         <Typography
                           as="a"
                           href="#"
                           className="text-xs font-semibold text-blue-gray-600"
+                          onClick={() => setOpen(true)}
                         >
                           Edit
                         </Typography>
@@ -110,7 +116,10 @@ export function Content() {
           </table>
         </CardBody>
       </Card>
+
     </div>
+        <ContentDrawer open={open} setOpen={setOpen}/>
+      </>
   );
 }
 

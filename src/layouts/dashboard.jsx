@@ -1,17 +1,12 @@
-import { Cog6ToothIcon } from "@heroicons/react/24/solid";
-import { IconButton } from "@material-tailwind/react";
-import {
-  Sidenav,
-  DashboardNavbar,
-  Configurator,
-  Footer,
-} from "../widgets/layout";
+import {Cog6ToothIcon} from "@heroicons/react/24/solid";
+import {IconButton} from "@material-tailwind/react";
+import {Configurator, DashboardNavbar, Footer, Sidenav,} from "../widgets/layout";
 import routes from "../routes";
-import { setOpenConfigurator } from "../context";
-import { Home, Tables } from "../pages/Dashboard";
-import { useState } from "react";
+import {Home} from "../pages/Dashboard";
+import {useState} from "react";
 import Profile from "../pages/Dashboard/profile";
 import Notifications from "../pages/Dashboard/notifications";
+import Content from "../pages/Dashboard/content";
 
 export function Dashboard() {
   const [selectedTab, setSelectedTab] = useState("dashboard");
@@ -37,7 +32,7 @@ export function Dashboard() {
         {selectedTab === "dashboard" && <Home />}
         {selectedTab === "profile" && <Profile />}
         {selectedTab === "notifications" && <Notifications />}
-        {selectedTab === "tables" && <Tables />}
+        {selectedTab === "content" && <Content />}
         <div className="text-blue-gray-600">
           <Footer />
         </div>
