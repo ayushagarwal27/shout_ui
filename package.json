@@ -18,10 +18,10 @@
     "react-router-dom": "6.17.0"
   },
   "scripts": {
-    "start": "../../../techgurus/shout_ui/shout_ui/node_modules/.bin/react-scripts start",
-    "build": "../../../techgurus/shout_ui/shout_ui/node_modules/.bin/react-scripts build",
-    "test": "../../../techgurus/shout_ui/shout_ui/node_modules/.bin/react-scripts test",
-    "eject": "../../../techgurus/shout_ui/shout_ui/node_modules/.bin/react-scripts eject"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.12.1",
